@@ -980,14 +980,8 @@ function md_add_comment($md_post_id, $cmt_author_id, $cmt_type, $cmt_content = N
 
 	md_add_comment_viewer($cmt_id, $cmt_author_id);
 
-	// Send notifications
-	switch($cmt_type){
-		case 'general':
-			md_send_notification('comment', $cmt_author_id);
-			break;
-		case 'review-request':
-			md_send_notification('review-request', $cmt_author_id);
-			break;
+	if('general' == $cmt_type){
+		md_notify('comment', $md_post_id, $cmt_author_id);
 	}
 
 }
@@ -1062,7 +1056,7 @@ function md_has_seen_comment($cmt_id, $viewer_id){
 }
 
 /*
- * MD_SEND_NOTIFICATION
+ * MD_NOTIFY
  *
  * Send a notification if appropriate.
  *
@@ -1071,28 +1065,56 @@ function md_has_seen_comment($cmt_id, $viewer_id){
  * @since 1.0
  *
  * @param string $type The type of notification
- * @param int $exclude User to exclude from notifications
+ * @param int $md_post_id The Post ID of metadraft
+ * @param int $initiator_id The ID of the user whose action initated the
+ * notification.
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function md_send_notification($type, $exclude){
+function md_notify($type, $md_post_id, $initiator_id){
+
+	// Get initiator info
+	$initiator = get_userdata($initiator_id);
+	$initiator_name = $initiator->display_name;
+	$initiator_email = $initiator->user_email;
+
+	// Get post info
+	$title = get_the_title($md_post_id);
+	$edit_link = get_edit_post_link($md_post_id, '');
+	$metadraft = md_get_metadraft($md_post_id);
+	$preview_link = get_permalink($md_post_id);
+	if(!$metadraft->md_is_orig){
+		$source_preview_link = get_permalink($metadraft->src_post_id);
+	}
+
+	$recipient_ids = array();
+	$subject = '';
+	$message = '';
+
 	switch($type){
 		case 'review-request':
-
 			$recipient_ids = get_option('md_notify_on_review_request');
-			foreach($recipient_ids as $recipient_id){
-				$user = get_userdata($recipient_id);
-				$email = $user->user_email;
-				wp_mail($email,  'Editorial review requested', 'Someone requested a review.');
+			$subject = $initiator_name . " requested a review of " . $title;
+			$message = "<h2>Editorial Review Request</h2>";
+			$message .= "<p><strong><a href='mailto:" . $initiator_email . "'>" . $initiator_name . "</a></strong> requested a review of <strong>" . $title . ".<strong></p>";
+			$message .= "<p><a href='" . $edit_link . "'>Review draft &raquo;</a> | <a href='" . $preview_link . "'>Preview draft &raquo;</a>";
+			if(!$metadraft->md_is_orig){
+				$message .= " | <a href='" . $source_preview_link . "'>Preview original &raquo;</a>";
 			}
+			$message .= "</p>";
 			break;
 		case 'comment':
 			$recipient_ids = get_option('md_notify_on_comment');
-			foreach($recipient_ids as $recipient_id){
-				$user = get_userdata($recipient_id);
-				$email = $user->user_email;
-				wp_mail($email,  'New editorial comment', 'Someone left a comment.');
-			}
+			$subject = 'New editorial comment';
+			$message = 'Someone left a comment.';
 			break;
 	}
+
+	foreach($recipient_ids as $recipient_id){
+		$recipient = get_userdata($recipient_id);
+		$recipient_email = $recipient->user_email;
+		$success = wp_mail($recipient_email, $subject, $message, "Content-type: text/html");
+		update_option('md_mail_status', $success);
+	}
+
 }
 

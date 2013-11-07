@@ -317,6 +317,7 @@ function md_on_save_request_review($post_id){
 
 			md_update_status($post_id, 'md-pending');
 			md_add_comment($post_id, $user_id, 'review-request', $comment_content);
+			md_notify('review-request', $post_id, $user_id);
 
 		}
 
