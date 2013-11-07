@@ -13,7 +13,6 @@ include(plugin_dir_path(__FILE__) . 'utilities.php');
 include(plugin_dir_path(__FILE__) . 'metaboxes.php');
 include(plugin_dir_path(__FILE__) . 'widgets.php');
 include(plugin_dir_path(__FILE__) . 'options.php');
-include(plugin_dir_path(__FILE__) . 'emails.php');
 include(plugin_dir_path(__FILE__) . 'ajax.php');
 
 /*
