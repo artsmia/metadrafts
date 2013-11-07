@@ -85,7 +85,8 @@ function md_setup(){
  * Return system to normal following plugin deactivation
  * 
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
- 
+
+/* 
 register_deactivation_hook( __FILE__, 'md_cleanup' );
 function md_cleanup(){
 	
@@ -107,6 +108,7 @@ function md_cleanup(){
 	$editor->remove_cap( 'bypass_metadrafts' );
 	$editor->remove_cap( 'manage_metadrafts' );
 }
+*/
 
 
 /*
