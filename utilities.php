@@ -981,7 +981,7 @@ function md_add_comment($md_post_id, $cmt_author_id, $cmt_type, $cmt_content = N
 	md_add_comment_viewer($cmt_id, $cmt_author_id);
 
 	if('general' == $cmt_type){
-		md_notify('comment', $md_post_id, $cmt_author_id);
+		md_notify('comment', $md_post_id, $cmt_author_id, $cmt_content);
 	}
 
 }
@@ -1067,10 +1067,11 @@ function md_has_seen_comment($cmt_id, $viewer_id){
  * @param string $type The type of notification
  * @param int $md_post_id The Post ID of metadraft
  * @param int $initiator_id The ID of the user whose action initated the
- * notification.
+ *   notification.
+ * @param string $comment Initiator comment to pass to the notification
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-function md_notify($type, $md_post_id, $initiator_id){
+function md_notify($type, $md_post_id, $initiator_id, $comment){
 
 	// Get initiator info
 	$initiator = get_userdata($initiator_id);
@@ -1078,13 +1079,16 @@ function md_notify($type, $md_post_id, $initiator_id){
 	$initiator_email = $initiator->user_email;
 
 	// Get post info
-	$title = get_the_title($md_post_id);
+	$title = html_entity_decode(get_the_title($md_post_id));
 	$edit_link = get_edit_post_link($md_post_id, '');
 	$metadraft = md_get_metadraft($md_post_id);
 	$preview_link = get_permalink($md_post_id);
 	if(!$metadraft->md_is_orig){
 		$source_preview_link = get_permalink($metadraft->src_post_id);
 	}
+
+	// Get comment
+	$comment = stripslashes($comment);
 
 	$recipient_ids = array();
 	$subject = '';
@@ -1093,10 +1097,13 @@ function md_notify($type, $md_post_id, $initiator_id){
 	switch($type){
 		case 'review-request':
 			$recipient_ids = get_option('md_notify_on_review_request');
-			$subject = $initiator_name . " requested a review of " . $title;
-			$message = "<h2>Editorial Review Request</h2>";
-			$message .= "<p><strong><a href='mailto:" . $initiator_email . "'>" . $initiator_name . "</a></strong> requested a review of <strong>" . $title . ".<strong></p>";
+			$subject = $initiator_name . " requested an editorial review of " . $title;
+			$message = "<html><head></head><body>";
+			$message .= "<h2>Editorial Review Request</h2>";
+			$message .= "<p><strong><a href='mailto:" . $initiator_email . "'>" . $initiator_name . "</a></strong> requested a review of <strong>" . $title . ":<strong></p>";
+			$message .= "<div style='padding:15px; background-color:#ddd; border:1px solid #ccc; font-style:italic;'>" . $comment . "</div>";
 			$message .= "<p><a href='" . $edit_link . "'>Review draft &raquo;</a> | <a href='" . $preview_link . "'>Preview draft &raquo;</a>";
+			$message .= "</body></html>";
 			if(!$metadraft->md_is_orig){
 				$message .= " | <a href='" . $source_preview_link . "'>Preview original &raquo;</a>";
 			}
@@ -1104,8 +1111,13 @@ function md_notify($type, $md_post_id, $initiator_id){
 			break;
 		case 'comment':
 			$recipient_ids = get_option('md_notify_on_comment');
-			$subject = 'New editorial comment';
-			$message = 'Someone left a comment.';
+			$subject = $initiator_name . " posted a comment to " . $title;
+			$message = "<html><head></head><body>";
+			$message .= "<h2>Comment Notification</h2>";
+			$message .= "<p><strong><a href='mailto:" . $initiator_email . "'>" . $initiator_name . "</a></strong> posted a comment to <strong>" . stripslashes($title) . ":<strong></p>";
+			$message .= "<div style='padding:15px; background-color:#ddd; border:1px solid #ccc; font-style:italic;'>" . $comment . "</div>";
+			$message .= "<p><a href='" . $edit_link . "'>Review draft &raquo;</a></p>";
+			$message .= "</body></html>";
 			break;
 	}
 
