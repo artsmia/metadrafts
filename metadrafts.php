@@ -262,7 +262,7 @@ function md_hide_edit_slug_box(){
 add_action('save_post', 'md_on_save_update_status', 10);
 function md_on_save_update_status($post_id){
 
-	if(!$_POST['md_apply_changes']){
+	if(!isset($_POST['md_apply_changes'])){
 
 		$metadraft = md_get_metadraft($post_id);
 		$user_id = get_current_user_id();
@@ -285,7 +285,7 @@ function md_on_save_update_status($post_id){
 add_action('save_post', 'md_on_save_apply_changes');
 function md_on_save_apply_changes($post_id){
 
-	if ($_POST['md_apply_changes'] && md_is_metadraft($post_id)){
+	if (isset($_POST['md_apply_changes']) && md_is_metadraft($post_id)){
 
 		$user_id = get_current_user_id();
 
@@ -305,7 +305,7 @@ function md_on_save_apply_changes($post_id){
 add_action('save_post', 'md_on_save_request_review');
 function md_on_save_request_review($post_id){
 
-	if($_POST['md_request_review'] && md_is_metadraft($post_id)){
+	if(isset($_POST['md_request_review']) && md_is_metadraft($post_id)){
 
 		$metadraft = md_get_metadraft($post_id);
 		$user_id = get_current_user_id();
@@ -333,7 +333,7 @@ function md_on_save_request_review($post_id){
 add_action('save_post', 'md_on_save_post_comment', 11);
 function md_on_save_post_comment($post_id){
 
-	if($_POST['md_submit_comment'] && $_POST['md_submit_comment'] != '' && $_POST['md_general_comment_content'] != '' && md_is_metadraft($post_id)){
+	if(isset($_POST['md_submit_comment']) && $_POST['md_submit_comment'] != '' && $_POST['md_general_comment_content'] != '' && md_is_metadraft($post_id)){
 
 		$user_id = get_current_user_id();
 		$comment_content = $_POST['md_general_comment_content'];
