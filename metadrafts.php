@@ -24,7 +24,7 @@ function md_enqueue_scripts_and_styles(){
 	wp_enqueue_script('list_js', plugins_url('js/list.min.js', __FILE__), array(), false, true);
 	wp_enqueue_script('md_admin_js', plugins_url('js/md_admin.js', __FILE__), array('jquery'), false, true);
 	wp_localize_script('md_admin_js', 'mdAjax', array(
-		applyChangesNonce => wp_create_nonce('md_do_apply_changes_nonce'),
+		'applyChangesNonce' => wp_create_nonce('md_do_apply_changes_nonce'),
 	));
 	wp_enqueue_style('md_admin_css', plugins_url('css/md_admin.css', __FILE__));
 }
@@ -243,7 +243,7 @@ function md_filter_post_state_labels($post_states, $post){
 add_action('admin_head', 'md_hide_edit_slug_box');
 function md_hide_edit_slug_box(){
   global $post;
-  if('pending' == $post->post_status){
+  if($post && 'pending' == $post->post_status){
     ?>
     <style type="text/css">
     #edit-slug-box{ display: none; }
