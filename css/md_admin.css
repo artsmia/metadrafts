@@ -145,7 +145,7 @@ span.byline.md-closed-trashed span{
 #md_comment_list li.md_comment_item:last-child{
 	border-bottom:0px;
 }
-#md_comment_list img.wp-user-avatar{
+#md_comment_list img.avatar{
 	float:left;
 	width:48px;
 	height:auto;
@@ -189,7 +189,7 @@ span.byline.md-closed-trashed span{
 
 /* Widgets : Images */
 
-.metadrafts_widget img.wp-user-avatar{
+.metadrafts_widget img.avatar{
 	float:left;
 	width:48px;
 	height:48px;
