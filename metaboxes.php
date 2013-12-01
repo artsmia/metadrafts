@@ -474,8 +474,6 @@ function md_comment_list($post, $metadraft, $source){
 
 		$content = $comment->cmt_content;
 
-		$seen_by = unserialize($comment->cmt_seen_by);
-
 		$date = $comment->cmt_date_posted;
 
 		$type = $comment->cmt_type;
