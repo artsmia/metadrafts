@@ -575,6 +575,11 @@ function md_apply_changes($md_post_id, $user_id){
 		);
 	}
 	
+	// If W3TC is being used, flush the cache for that post
+	if(function_exists('w3tc_pgcache_flush_post')){
+		w3tc_pgcache_flush_post($md_post_id);
+	}
+	
 	md_close_metadraft('apply', $md_post_id, $user_id);
 	
 	// Reinstate save action
