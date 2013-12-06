@@ -25,9 +25,6 @@ this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// TODO: Replace with option
-date_default_timezone_set('America/Chicago');
-
 include(plugin_dir_path(__FILE__) . 'utilities.php');
 include(plugin_dir_path(__FILE__) . 'metaboxes.php');
 include(plugin_dir_path(__FILE__) . 'widgets.php');
