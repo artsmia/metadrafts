@@ -95,38 +95,6 @@ function md_setup(){
 	$admin->add_cap( 'manage_metadrafts' );
 }
 
-
-/*
- * MD_CLEANUP
- * Return system to normal following plugin deactivation
- * 
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-/* 
-register_deactivation_hook( __FILE__, 'md_cleanup' );
-function md_cleanup(){
-	
-	// Drop Metadrafts table
-	global $wpdb;
-	$md_metadrafts = $wpdb->prefix . "md_metadrafts";
-	$wpdb->query("DROP TABLE IF EXISTS $md_metadrafts");
-	
-	// Drop Comments table
-	$md_comments = $wpdb->prefix . "md_comments";
-	$wpdb->query("DROP TABLE IF EXISTS $md_comments");
-	
-	// Drop Comments Relationships table
-	$md_comments_rel = $wpdb->prefix . "md_comments_rel";
-	$wpdb->query("DROP TABLE IF EXISTS $md_comments_rel");
-	
-	// Remove bypass_metadrafts and manage_metadrafts capabilities from admin
-	$editor = get_role( 'administrator' );
-	$editor->remove_cap( 'bypass_metadrafts' );
-	$editor->remove_cap( 'manage_metadrafts' );
-}
-*/
-
-
 /*
  * MD_ROUTE_USER
  * Redirect authors to their personal revision of a page,
