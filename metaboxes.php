@@ -106,7 +106,9 @@ function md_metadraft_metabox_misc($post, $metadraft, $source) {
 			$author = get_userdata($metadraft->md_author_id);
 			$author_name = $author->display_name;
 
-			$source_edit_link = get_edit_post_link($source->ID);
+      if(isset($source->ID)){
+			  $source_edit_link = get_edit_post_link($source->ID);
+      }
 
 			$permalink = get_permalink($post->ID);
 			if(!$metadraft->md_is_orig){

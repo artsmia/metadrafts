@@ -212,7 +212,7 @@ function md_filter_pending_count($current_screen){
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 add_filter('display_post_states', 'md_filter_post_state_labels', 10, 2);
 function md_filter_post_state_labels($post_states, $post){
-  if ( 'pending' == $post->post_status && 'pending' != $post_status ){
+  if ( 'pending' == $post->post_status ){
     $post_states['pending'] = _x('In Progress', 'post state');
   }
   return $post_states;
@@ -350,3 +350,51 @@ function md_on_save_trash_metadraft($post_id){
 		}
 	}
 }
+
+
+/*
+ * MD_MODIFY_P2P_CONNECTABLE_ARGS
+ * Filter out metadrafts from P2P's connectable list unless 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+add_filter('p2p_connectable_args', 'md_modify_p2p_connectable_args', 10, 3);
+function md_modify_p2p_connectable_args($args, $ctype, $post_id){
+
+	// Generate list of metadrafts to exclude (i.e. those with a src_post_id)
+	global $wpdb;
+	$metadrafts = $wpdb->prefix . 'md_metadrafts';
+	$excludes = $wpdb->get_col("SELECT md_post_id FROM $metadrafts WHERE src_post_id IS NOT NULL");
+
+	// Exclude
+	$args['post__not_in'] = $excludes;
+	return($args);
+
+}
+
+/*
+ * MD_MODIFY_P2P_CONNECTED_ARGS
+ * Filter out metadrafts from P2P's connectable list unless 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+add_filter('p2p_connected_args', 'md_modify_p2p_connected_args', 10, 3);
+function md_modify_p2p_connected_args($args, $ctype, $post_id){
+
+	// Generate list of metadrafts to exclude (i.e. those with a src_post_id)
+	global $wpdb;
+	$metadrafts = $wpdb->prefix . 'md_metadrafts';
+	$excludes = $wpdb->get_col("SELECT md_post_id FROM $metadrafts WHERE src_post_id IS NOT NULL");
+
+	// Exclude
+	$args['post__not_in'] = $excludes;
+	return($args);
+
+}
+
+
+
+
+
+
+
+
+
