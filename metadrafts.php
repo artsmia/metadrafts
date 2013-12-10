@@ -354,7 +354,9 @@ function md_on_save_trash_metadraft($post_id){
 
 /*
  * MD_MODIFY_P2P_CONNECTABLE_ARGS
- * Filter out metadrafts from P2P's connectable list unless 
+ * Filter out metadrafts from P2P's connectable list unless they don't yet
+ * have a source ID (i.e. haven't been published yet). When such a post is
+ * published, the connection will change to the published version.
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 add_filter('p2p_connectable_args', 'md_modify_p2p_connectable_args', 10, 3);
@@ -370,13 +372,16 @@ function md_modify_p2p_connectable_args($args, $ctype, $post_id){
 	$p2p_exclude = $args['p2p:exclude'];
 	$combined_exclude = array_merge($p2p_exclude, $md_exclude);
 	$args['p2p:exclude'] = $combined_exclude;
+
 	return($args);
 
 }
 
 /*
  * MD_MODIFY_P2P_CONNECTED_ARGS
- * Filter out metadrafts from P2P's connectable list unless 
+ * Filter out metadrafts from P2P's connected list unless they don't yet
+ * have a source ID (i.e. haven't been published yet). When such a post is
+ * published, the connection will change to the published version.
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 add_filter('p2p_connected_args', 'md_modify_p2p_connected_args', 10, 3);
@@ -390,15 +395,7 @@ function md_modify_p2p_connected_args($args, $ctype, $post_id){
 	// Exclude
 	// Standard WP_Query parameter
 	$args['post__not_in'] = $excludes;
+
 	return($args);
 
 }
-
-
-
-
-
-
-
-
-
