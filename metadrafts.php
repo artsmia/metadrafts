@@ -363,10 +363,13 @@ function md_modify_p2p_connectable_args($args, $ctype, $post_id){
 	// Generate list of metadrafts to exclude (i.e. those with a src_post_id)
 	global $wpdb;
 	$metadrafts = $wpdb->prefix . 'md_metadrafts';
-	$excludes = $wpdb->get_col("SELECT md_post_id FROM $metadrafts WHERE src_post_id IS NOT NULL");
+	$md_exclude = $wpdb->get_col("SELECT md_post_id FROM $metadrafts WHERE src_post_id IS NOT NULL");
 
 	// Exclude
-	$args['post__not_in'] = $excludes;
+	// P2P uses a custom p2p:exclude parameter for its connectables query, so we're modifying that
+	$p2p_exclude = $args['p2p:exclude'];
+	$combined_exclude = array_merge($p2p_exclude, $md_exclude);
+	$args['p2p:exclude'] = $combined_exclude;
 	return($args);
 
 }
@@ -385,6 +388,7 @@ function md_modify_p2p_connected_args($args, $ctype, $post_id){
 	$excludes = $wpdb->get_col("SELECT md_post_id FROM $metadrafts WHERE src_post_id IS NOT NULL");
 
 	// Exclude
+	// Standard WP_Query parameter
 	$args['post__not_in'] = $excludes;
 	return($args);
 
