@@ -128,7 +128,7 @@ function md_enqueue_route_user(){
 		if ($pagenow == 'post.php') {				
 
 			// Post being edited is eligible for metadrafts
-			if($post->post_type != 'attachment' && !md_is_metadraft($post->ID)) {
+			if($post->post_type != 'attachment' && !md_is_metadraft($post->ID) && $post->post_status != 'publish') {
 		
 				// Has the user already created a metadraft for this post?
 				$md_post_id = md_get_metadraft_for($post->ID, $user_id);
