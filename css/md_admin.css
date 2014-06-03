@@ -106,6 +106,9 @@ span.byline.md-closed-trashed span{
 #metadrafts #metadraft_status.closed{
 	border-bottom:0px;
 }
+#metadrafts #metadraft_status p:not(:first-child){
+	margin-top:10px;
+}
 #metadraft_comments .inside{
 	padding:0px;
 	margin-top:0px;

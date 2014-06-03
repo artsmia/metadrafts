@@ -227,6 +227,18 @@ function md_metadraft_status($post, $metadraft, $source){
 
 	<div id='metadraft_status' class='<?php echo $status_class; ?>'>
 		<p>Status: <span class='status_box <?php echo $status_slug; ?>'></span> <span class='status_name'><?php echo $status; ?></span></p>
+
+		<?php
+		if( $status_slug === 'md-closed-applied' ) {
+			$source_link = get_edit_post_link( $metadraft->src_post_id );
+			$view_link = get_permalink( $metadraft->src_post_id );
+			?>
+			<p>This draft has been copied over to the live site and further changes here will have no effect.</p>
+			<p><a href='<?php echo $source_link; ?>'>Edit published version&nbsp;&raquo;</a><br /><a href='<?php echo $view_link; ?>'>View published version&nbsp;&raquo;</a></p>
+			<?php
+		}
+		?>
+
 	</div>
 
 	<?php
