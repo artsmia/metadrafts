@@ -94,11 +94,25 @@ span.byline.md-closed-trashed span{
 #metadrafts #md_trash_post:hover{
 	background-color:#ff0000;
 }
-#metadrafts #md_request_review_form{
+#metadrafts #md_request_review_form,
+#metadrafts #md_apply_changes_form{
 	clear:both;
-	padding-top:10px;
+	padding-top:15px;
 	display:none;
 }
+#metadrafts #md_apply_changes_form label,
+#metadrafts #md_post_status{
+	display:block;
+	width:100%;
+	margin:5px 0 10px;
+}
+#metadrafts #md_schedule_date{
+	display:none;
+	width:100%;
+	text-align:left;
+	margin:5px 0 10px;
+}
+
 #metadrafts #metadraft_status{
 	padding:10px;
 	border-bottom:1px solid #dfdfdf;

@@ -209,9 +209,9 @@ function md_metadraft_status($post, $metadraft, $source){
 			break;
 		case 'md-closed-applied':
 			if($metadraft->md_is_orig){
-				$status = 'Published';
+				$status = 'Approved';
 			} else {
-				$status = 'Changed Applied';
+				$status = 'Approved';
 			}
 			break;
 		case 'md-closed-trashed':
@@ -233,8 +233,8 @@ function md_metadraft_status($post, $metadraft, $source){
 			$source_link = get_edit_post_link( $metadraft->src_post_id );
 			$view_link = get_permalink( $metadraft->src_post_id );
 			?>
-			<p>This draft has been copied over to the live site and further changes here will have no effect.</p>
-			<p><a href='<?php echo $source_link; ?>'>Edit published version&nbsp;&raquo;</a><br /><a href='<?php echo $view_link; ?>'>View published version&nbsp;&raquo;</a></p>
+			<p>This draft has been approved and further changes here will have no effect.</p>
+			<p><a href='<?php echo $source_link; ?>'>Edit current version&nbsp;&raquo;</a><br /><a href='<?php echo $view_link; ?>'>View current version&nbsp;&raquo;</a></p>
 			<?php
 		}
 		?>
@@ -328,24 +328,33 @@ function md_metadraft_major($post, $metadraft, $source){
 
 				</div>
 
-					<?php if (current_user_can('manage_metadrafts') && $metadraft->md_is_orig) { ?>
+					<?php if ( current_user_can('manage_metadrafts') ) { ?>
 
 						<div id='publishing-action'>
 							<span class="spinner"></span>
-							<input type='submit' name='md_apply_changes' id='md_apply_changes' value='Publish <?php echo $post_type_label; ?>' class='button button-primary button-large'>
+							<a href='#' id='md_toggle_apply_changes' class='button button-large'>Approve ...</a>
 						</div>
-
-					<?php } else if (current_user_can('manage_metadrafts')) { ?>
-
-						<div id='publishing-action'>
+						<div id='md_apply_changes_form'>
+							<label for='md_post_status'>What status should the approved <?php echo strtolower( $post_type_label ); ?> have?</label>
+							<select name='md_post_status' id='md_post_status'>
+								<?php if( ! $metadraft->md_is_orig ){ ?>
+								<option value='source' selected>Don't change the status</option>
+								<?php } ?>
+								<option value='publish'>Published</option>
+								<option value='draft'>Draft</option>
+								<option value='future'>Scheduled</option>
+								<option value='private'>Private</option>
+							</select>
+							<input type='text' name='md_schedule_date' id='md_schedule_date' placeholder='Enter publish date' />
 							<span class="spinner"></span>
-							<input type='submit' name='md_apply_changes' id='md_apply_changes' value='Apply Changes' class='button button-primary button-large'>
+							<input type='submit' name='md_apply_changes' id='md_apply_changes' value='Submit Approval' class='button button-primary button-large' />
 						</div>
+
 
 					<?php } else if ($metadraft->md_status=='md-auto-draft' || $metadraft->md_status=='md-draft') { ?>
 
 						<div id='publishing-action'>
-							<a href='#' id='md_toggle_request_review' class='button button-large button-primary'>Request Review ...</a>
+							<a href='#' id='md_toggle_request_review' class='button button-large'>Request Review ...</a>
 						</div>
 						<div id='md_request_review_form'>
 							<?php if ($metadraft->md_is_orig){ ?>
@@ -354,7 +363,7 @@ function md_metadraft_major($post, $metadraft, $source){
 							<textarea name='md_comment_content' id='md_request_review_comment_field' placeholder='Assist the reviewer with a one-sentence description your edits to this <?php echo strtolower($post_type_label); ?>.'></textarea>
 							<?php } ?>
 							<span class="spinner"></span>
-							<input type='submit' name='md_request_review' id='md_request_review' value='Submit Request' class='button button-primary button-large'>
+							<input type='submit' name='md_request_review' id='md_request_review' value='Submit Request' class='button button-primary button-large' />
 						</div>
 
 					<?php } ?>
@@ -517,14 +526,10 @@ function md_comment_list($post, $metadraft, $source){
 							echo "<span class='action'>commented:</span>";
 							break;
 						case 'review-request':
-							echo "<span class='action'>requested a draft review:";
+							echo "<span class='action'>requested a draft review:</span>";
 							break;
 						case 'closed-applied':
-							if($metadraft->md_is_orig){
-								echo "<span class='action'>published the draft.</span>";
-							} else {
-								echo "<span class='action'>applied the changes.</span>";
-							}
+							echo "<span class='action'>approved the draft.</span>";
 							break;
 						case 'closed-trashed':
 							echo "<span class='action'>discarded the draft.</span>";

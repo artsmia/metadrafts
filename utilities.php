@@ -434,6 +434,27 @@ function md_apply_changes($md_post_id, $user_id){
 	// Temporarily remove action to prevent save loop
 	remove_action('save_post', 'md_save_apply_changes');
 
+	$post_status = isset( $_POST['md_post_status'] ) ? $_POST['md_post_status'] : 'draft';
+	$post_date = null;
+
+	switch( $post_status ){
+		case 'future':
+			// If provided time is parseable, set post date; otherwise fall back to
+			// draft status
+			if( isset( $_POST['md_schedule_date'] ) && $time = strtotime( $_POST['md_schedule_date'] ) ){
+				$post_date = date( 'Y-m-d H:i:s', $time );
+			} else {
+				$post_status = 'draft';
+			}
+			break;
+
+		case 'source':
+			// 'Source' should only be an option if ! md_is_orig, so src_post_id
+			// should be available
+			$post_status = get_post_status( $src_post_id );
+			break;
+	}
+
 	if($metadraft->md_is_orig && !$metadraft->src_post_id){
 
 		// Update content, title, excerpt of post
@@ -442,11 +463,15 @@ function md_apply_changes($md_post_id, $user_id){
 			'post_content' => $post->post_content,
 			'post_title' => $post->post_title,
 			'post_excerpt' => $post->post_excerpt,
-			'post_status' => 'publish',
+			'post_status' => $post_status,
 			'post_parent' => $post->post_parent,
 			'menu_order' => $post->menu_order,
-			'post_type' => $post->post_type
+			'post_type' => $post->post_type,
 		);
+
+		if( 'future' === $post_status ){
+			$args['post_date'] = $post_date;
+		}
 
 		$src_post_id = wp_insert_post($args);
 		md_update_src($md_post_id, $src_post_id);
@@ -459,7 +484,12 @@ function md_apply_changes($md_post_id, $user_id){
 			'post_content' => $post->post_content,
 			'post_title' => $post->post_title,
 			'post_excerpt' => $post->post_excerpt,
+			'post_status' => $post_status,
 		);
+
+		if( 'future' === $post_status ){
+			$args['post_date'] = $post_date;
+		}
 
 		wp_update_post($args);
 	}
