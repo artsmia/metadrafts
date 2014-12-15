@@ -345,7 +345,7 @@ function md_metadraft_major($post, $metadraft, $source){
 								<option value='future'>Scheduled</option>
 								<option value='private'>Private</option>
 							</select>
-							<input type='text' name='md_schedule_date' id='md_schedule_date' placeholder='Enter publish date' />
+							<input type='text' name='md_schedule_date' id='md_schedule_date' placeholder='yyyy-mm-dd hh:mm:ss (+ 6 hours, military time)' />
 							<span class="spinner"></span>
 							<input type='submit' name='md_apply_changes' id='md_apply_changes' value='Submit Approval' class='button button-primary button-large' />
 						</div>
