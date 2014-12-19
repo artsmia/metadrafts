@@ -20,11 +20,11 @@ function md_enqueue_metaboxes(){
 			remove_meta_box('submitdiv', $post->post_type, 'side');
 
 			add_meta_box(
-				'metadrafts', 
-				'Draft', 
-				'md_metadraft_metabox', 
-				$post->post_type, 
-				'side', 
+				'metadrafts',
+				'Draft',
+				'md_metadraft_metabox',
+				$post->post_type,
+				'side',
 				'high'
 			);
 
@@ -81,14 +81,14 @@ function md_metadraft_metabox_minor($post, $metadraft, $source){
 		<div class='clear'></div>
 
 	</div>
-		
+
 	<?php
 
 	}
 }
 
 add_action('md_metadraft_metabox', 'md_metadraft_metabox_misc', 2, 3);
-function md_metadraft_metabox_misc($post, $metadraft, $source) { 
+function md_metadraft_metabox_misc($post, $metadraft, $source) {
 
 	if(substr($metadraft->md_status, 0, 9) != 'md-closed'){
 
@@ -122,8 +122,8 @@ function md_metadraft_metabox_misc($post, $metadraft, $source) {
 					echo "<div id='md_preview_draft'><a class='button' href='" . $permalink . "' target='_blank'>Preview</a></div>";
 					echo "<p>You are drafting a new " . $post_type_label . ".";
 					echo "<br class='clear' />";
-				
-				} else { 
+
+				} else {
 
 					if (current_user_can('bypass_metadrafts') || current_user_can('manage_metadrafts')){
 
@@ -178,7 +178,7 @@ function md_metadraft_metabox_misc($post, $metadraft, $source) {
 					}
 
 				}
-			} 
+			}
 
 			?>
 
@@ -249,17 +249,17 @@ function md_metadraft_nav($post, $metadraft, $source){
 
 	$post_type = get_post_type_object($post->post_type);
 	$post_type_label = $post_type->labels->singular_name;
-	
+
 	?>
 
 	<div id='metadraft-navigation'>
 
-	<?php 
+	<?php
 
 	$siblings = md_get_siblings($post->ID);
 
 	if ($metadraft->src_post_id && !empty($siblings)){
-		
+
 	?>
 
 		<div id='metadraft-siblings' class='metadraft-mb-section'>
@@ -273,7 +273,7 @@ function md_metadraft_nav($post, $metadraft, $source){
 			foreach($siblings as $sibling){
 
 				$author = get_userdata($sibling->md_author_id);
-				$author_name = $author->display_name;	
+				$author_name = $author->display_name;
 
 				$edit_link = get_edit_post_link($sibling->md_post_id);
 
@@ -291,9 +291,9 @@ function md_metadraft_nav($post, $metadraft, $source){
 
 		</div>
 
-	<?php 
+	<?php
 
-	} 
+	}
 
 	?>
 
@@ -345,7 +345,8 @@ function md_metadraft_major($post, $metadraft, $source){
 								<option value='future'>Scheduled</option>
 								<option value='private'>Private</option>
 							</select>
-							<input type='text' name='md_schedule_date' id='md_schedule_date' placeholder='yyyy-mm-dd hh:mm:ss (+ 6 hours, military time)' />
+							<input type='text' name='md_schedule_date' id='md_schedule_date' placeholder='<?php
+							echo 'Site Time: ' . current_time('mysql');?>' />
 							<span class="spinner"></span>
 							<input type='submit' name='md_apply_changes' id='md_apply_changes' value='Submit Approval' class='button button-primary button-large' />
 						</div>
@@ -383,17 +384,17 @@ function md_source_metabox_nav(){
 	global $post;
 	$post_type = get_post_type_object($post->post_type);
 	$post_type_label = $post_type->labels->singular_name;
-	
+
 	?>
 
 	<div id='metadrafts'>
 
-	<?php 
+	<?php
 
 	$children = md_get_children($post->ID);
 
 	if (!empty($children)){
-		
+
 	?>
 
 		<div class='metadraft-mb-section'>
@@ -407,7 +408,7 @@ function md_source_metabox_nav(){
 			foreach($children as $child){
 
 				$author = get_userdata($child->md_author_id);
-				$author_name = $author->display_name;	
+				$author_name = $author->display_name;
 
 				$edit_link = get_edit_post_link($child->md_post_id);
 
@@ -425,9 +426,9 @@ function md_source_metabox_nav(){
 
 		</div>
 
-	<?php 
+	<?php
 
-	} 
+	}
 
 	?>
 
@@ -441,7 +442,7 @@ function md_source_metabox_nav(){
 
 /*
  * MD_METADRAFT_COMMENTS_METABOX
- * Provides a framework for building comments metabox on the metadraft edit 
+ * Provides a framework for building comments metabox on the metadraft edit
  * screen
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -517,7 +518,7 @@ function md_comment_list($post, $metadraft, $source){
 
 				<h4 class='byline'>
 					<span class='author'><?php echo $author_name; ?></span>
-					<?php 
+					<?php
 					switch($type){
 						case 'init':
 							echo "<span class='action'>created the draft.</span>";
@@ -551,4 +552,3 @@ function md_comment_list($post, $metadraft, $source){
 	echo "</div>";
 
 }
-
