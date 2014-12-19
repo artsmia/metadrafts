@@ -116,7 +116,7 @@ function md_manage_metadrafts_widget_content(){
 						<?php if($metadraft->md_is_orig){ ?>
 							<a href='<?php echo $permalink; ?>' target='_blank'>Preview Draft</a>
 							<?php if($status_slug == 'md-pending'){ ?> | 
-							<a href='#' class='md_ajax_apply' data-md-post-id='<?php echo $metadraft->md_post_id; ?>'>Publish</a>
+							<a href='#' class='md_ajax_apply' data-md-post-id='<?php echo $metadraft->md_post_id; ?>'>Approve</a>
 							<?php } ?>
 						<?php } else { ?>
 							<a href='<?php echo $source_permalink; ?>' target='_blank'>Preview Original</a> | 
@@ -304,11 +304,11 @@ function md_my_closed_metadrafts_widget_content(){
 				$status_sort = $status_slug == 'md-closed-applied' ? '1' : ($status_slug == 'md-closed-trashed' ? '2' : '3'); 
 				if($status_slug == 'md-closed-applied'){
 					if($metadraft->md_is_orig){
-						$status = 'Published';
-						$action = ' published your draft';
+						$status = 'Approved';
+						$action = ' approved your draft';
 					} else {
-						$status = 'Changes Applied';
-						$action = ' applied your changes to';
+						$status = 'Approved';
+						$action = ' approved your changes to';
 					}
 				} else if ($status_slug == 'md-closed-trashed'){
 					$status = 'Discarded';

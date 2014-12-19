@@ -45,6 +45,17 @@ jQuery(document).ready(function(){
 		e.preventDefault();
 		jQuery('#md_request_review_form').slideDown(125);
 	});
+	jQuery('#md_toggle_apply_changes').on('click', function(e){
+		e.preventDefault();
+		jQuery('#md_apply_changes_form').slideDown(125);
+	});
+	jQuery('#md_post_status').on('change', function(e){
+		if( 'future' === jQuery( this ).val() ){
+			jQuery( '#md_schedule_date' ).slideDown(125);
+		} else {
+			jQuery( '#md_schedule_date' ).slideUp(125);
+		}
+	});
 
 	// Apply changes from dashboard
 
